@@ -17,11 +17,3 @@ class ConfigurationError(AssistantError):
 
 class ProviderError(AssistantError):
     """An external provider (LLM, vector store, embeddings) failed."""
-
-
-class GroundingError(AssistantError):
-    """The assistant could not ground an answer in verified knowledge."""
-
-
-class KnowledgeBaseError(AssistantError):
-    """The knowledge base could not be loaded or indexed."""
