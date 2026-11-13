@@ -5,7 +5,6 @@ export type ChatMessageData = {
 	role: ChatRole;
 	content: string;
 	time: string;
-	kind?: "fibre" | "roaming";
 	confidence?: string;
 	sources?: ChatSource[];
 };
