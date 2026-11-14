@@ -16,6 +16,7 @@ from google.genai import types
 
 from app.application.services.assistant_service import AssistantService
 from config import Settings
+from prompt import get_live_voice_system_prompt
 
 logger = logging.getLogger(__name__)
 
@@ -119,44 +120,8 @@ def _trim_voice_context(text: str, limit: int = _VOICE_CONTEXT_CHARS) -> str:
 
 
 def _get_system_prompt(language: str) -> str:
-    _, _, kind = _language_profile(language)
-    if kind == "si":
-        lang_note = (
-            "Respond warmly, naturally, and clearly in Sinhala (සිංහල). "
-            "Speak at a calm, steady, well-paced conversational speed. "
-            "Keep responses conversational, natural, and clear (1 to 2 short sentences maximum)."
-        )
-    elif kind == "ta":
-        lang_note = (
-            "Respond warmly, naturally, and clearly in Tamil (தமிழ்). "
-            "Speak at a calm, steady, well-paced conversational speed. "
-            "Keep responses conversational, natural, and clear (1 to 2 short sentences maximum)."
-        )
-    else:
-        lang_note = (
-            "Respond warmly, naturally, and clearly in English. "
-            "Speak at a calm, steady, well-paced conversational speed. "
-            "Keep responses conversational, natural, and clear (1 to 2 short sentences maximum)."
-        )
-
-    return (
-        "You are the virtual AI customer-care voice assistant for SLT-MOBITEL, "
-        "Sri Lanka's premier telecommunications network. "
-        "When introducing yourself, say you are SLT Avatar, the SLT-MOBITEL AI Assistant. Do not use a personal name. "
-        "You are in a live phone-call style conversation with a customer. "
-        f"{lang_note} "
-        "IMPORTANT RULES:\n"
-        "1. Never speak markdown, bullet points, asterisks, URLs, or tables.\n"
-        "2. Speak in a clear, natural, warmly paced, and steady voice. Do not rush or speak too fast.\n"
-        "3. Keep spoken responses conversational, friendly, and informative (1 to 2 short sentences maximum).\n"
-        "4. Always call the `query_slt_knowledge` tool whenever the customer asks about packages "
-        "(Fiber/FTTH, 4G LTE, ADSL), new connection charges, prices, router settings, or bill payments.\n"
-        "5. Base your answers strictly on verified information returned by `query_slt_knowledge`.\n"
-        "6. When answering about packages, mention the key package names (such as Fiber Starter, "
-        "Trio Vibe, or Unlimited packages) and their key monthly rentals or speeds from the verified knowledge.\n"
-        "7. Only suggest calling the SLT customer helpline on 1212 if the requested specific information "
-        "is not found in the verified knowledge base."
-    )
+    """Retrieve the authoritative voice system instruction from prompt.py."""
+    return get_live_voice_system_prompt(language)
 
 
 def _build_rag_tool() -> types.Tool:
@@ -192,6 +157,7 @@ def _transcription_config(bcp47: str | None) -> types.AudioTranscriptionConfig:
 def _build_live_config(
     language: str,
     *,
+    live_model: str = "",
     with_language_hint: bool = True,
     with_zero_thinking: bool = True,
 ) -> types.LiveConnectConfig:
@@ -218,7 +184,8 @@ def _build_live_config(
         "context_window_compression": _CONTEXT_COMPRESSION,
         "temperature": 0.4,
     }
-    if with_zero_thinking:
+    # Only Gemini 2.5 Live models accept thinking_budget=0; Gemini 3.8 Live has zero thinking built-in
+    if with_zero_thinking and ("2.5" in live_model or not live_model):
         config_kwargs["thinking_config"] = types.ThinkingConfig(thinking_budget=0)
 
     return types.LiveConnectConfig(**config_kwargs)
@@ -297,7 +264,7 @@ def _greeting_prompt(language: str) -> str:
         )
     return (
         "The customer just connected. Greet them warmly with only: "
-        "'Hello! Welcome to SLT-MOBITEL. I am your AI Assistant, how can I help you today?'"
+        "'Hello! Welcome to SLT-MOBITEL. I am the SLT-MOBITEL AI Assistant, how can I help you today?'"
     )
 
 
@@ -331,8 +298,8 @@ def voice_live_router(assistant: AssistantService, settings: Settings) -> APIRou
 
         client = _get_genai_client(settings.google_api_key)
         configs = [
-            _build_live_config(language, with_language_hint=True, with_zero_thinking=True),
-            _build_live_config(language, with_language_hint=False, with_zero_thinking=True),
+            _build_live_config(language, live_model=live_model, with_language_hint=True, with_zero_thinking=True),
+            _build_live_config(language, live_model=live_model, with_language_hint=False, with_zero_thinking=True),
         ]
 
         session_cm = None
