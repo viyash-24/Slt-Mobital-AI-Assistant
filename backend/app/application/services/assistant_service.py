@@ -149,13 +149,29 @@ class AssistantService:
 
     @staticmethod
     def _build_context(documents: list) -> str:
-        """Assemble retrieved documents into a formatted context string."""
+        """Assemble retrieved documents into a formatted context string.
+
+        Deduplicates identical or overlapping content blocks to minimize prompt tokens
+        and focus Gemini 3.5 Flash Lite's reasoning on unique verified facts.
+        """
         blocks: list[str] = []
+        seen_texts: set[str] = set()
+
         for doc in documents:
+            text = (doc.page_content or "").strip()
+            if not text:
+                continue
+
+            normalized_key = " ".join(text.split()[:40]).lower()
+            if normalized_key in seen_texts:
+                continue
+            seen_texts.add(normalized_key)
+
             title = doc.metadata.get("title") or doc.metadata.get("source") or "Document"
             category = doc.metadata.get("category", "")
-            header = f"[{title} | Category: {category}]" if category else f"[{title}]"
-            blocks.append(f"{header}\n{doc.page_content}")
+            header = f"[Verified Source: {title} | Category: {category}]" if category else f"[Verified Source: {title}]"
+            blocks.append(f"{header}\n{text}")
+
         return "\n\n---\n\n".join(blocks)
 
     @staticmethod
