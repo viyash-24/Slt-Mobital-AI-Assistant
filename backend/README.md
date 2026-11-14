@@ -5,8 +5,9 @@ FastAPI application delivering text chat and real-time live voice assistant capa
 ## Architecture
 
 - **Clean Architecture:** Domain entities, application services, infrastructure adapters (Gemini, pgvector), and API route controllers.
-- **RAG Pipeline:** Document chunking, Gemini embeddings, and PostgreSQL/pgvector semantic similarity search with keyword search fallback.
-- **Live Voice Agent:** Full-duplex real-time audio communication powered by Google Gemini Live API (`gemini-2.5-flash-native-audio-latest`), featuring real-time speech synthesis, VAD turn detection, and 60 FPS lip-synchronized avatar animation.
+- **Text Chat Agent:** Grounded conversational support powered by Google Gemini 3.5 Flash Lite (`gemini-3.5-flash-lite`) with connection pooling, multi-turn conversational structuring, calibrated reasoning controls (`thinking_level`), and candidate model fallback.
+- **RAG Pipeline:** Document chunking, Gemini embeddings, and PostgreSQL/pgvector semantic similarity search with keyword search fallback and duplicate chunk filtering.
+- **Live Voice Agent:** Full-duplex real-time audio communication powered by Google Gemini Live API (`gemini-3.8-live`), featuring real-time speech synthesis, VAD turn detection, and 60 FPS lip-synchronized avatar animation.
 
 ## Setup
 
@@ -27,10 +28,15 @@ Configure `backend/.env`:
 GOOGLE_API_KEY=your_google_api_key
 DATABASE_URL=postgresql://user:password@localhost:5432/slt_assistant
 CORS_ORIGINS=http://localhost:3000
-GEMINI_MODEL=gemini-2.5-flash-lite
-GEMINI_LIVE_MODEL=gemini-2.5-flash-native-audio-latest
+GEMINI_MODEL=gemini-3.5-flash-lite
+GEMINI_LIVE_MODEL=gemini-3.8-live
 GEMINI_EMBEDDING_MODEL=models/gemini-embedding-001
 PGVECTOR_COLLECTION=slt_mobitel_knowledge
+GEMINI_TEMPERATURE=0.2
+GEMINI_TOP_P=0.95
+GEMINI_MAX_OUTPUT_TOKENS=1024
+GEMINI_THINKING_LEVEL=medium
+GEMINI_REQUEST_TIMEOUT=30.0
 ```
 
 ## Running the Server
@@ -50,8 +56,8 @@ The API is available at `http://localhost:8000`. Open `/docs` for the interactiv
 
 ## Tests
 
-Run route and integration tests:
+Run route, agent, and integration tests:
 
 ```powershell
-python -m pytest test_voice_routes.py -v
+python -m pytest -v
 ```
