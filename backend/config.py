@@ -8,10 +8,15 @@ class Settings(BaseSettings):
     google_api_key: str = ""
     database_url: str = ""
     cors_origins: str = "http://localhost:3000"
-    gemini_model: str = "gemini-2.5-flash-lite"
-    gemini_live_model: str = "gemini-2.5-flash-native-audio-latest"
+    gemini_model: str = "gemini-3.5-flash-lite"
+    gemini_live_model: str = "gemini-3.8-live"
     gemini_embedding_model: str = "models/gemini-embedding-001"
     pgvector_collection: str = "slt_mobitel_knowledge"
+    gemini_temperature: float = 0.2
+    gemini_top_p: float = 0.95
+    gemini_max_output_tokens: int = 1024
+    gemini_thinking_level: str = "medium"
+    gemini_request_timeout: float = 30.0
 
     model_config = SettingsConfigDict(
         env_file=Path(__file__).resolve().parent / ".env",
