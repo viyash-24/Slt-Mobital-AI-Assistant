@@ -28,21 +28,28 @@ const RECONNECT_DELAY_MS = 450;
 // 120 ms provides a solid runway that absorbs WebSocket network packet jitter
 // without dropping or skipping samples, completely eliminating stutter and breaking.
 
-function getVoiceWebSocketUrl(sessionId: string, language: string): string {
+function getVoiceWebSocketUrl(
+  sessionId: string,
+  language: string
+): string {
   const envApi = process.env.NEXT_PUBLIC_API_URL;
-  if (envApi) {
-    const wsBase = envApi.replace(/^http/, "ws");
-    return `${wsBase}/api/voice/live?session_id=${encodeURIComponent(sessionId)}&language=${encodeURIComponent(language)}`;
+
+  if (!envApi) {
+    throw new Error(
+      "NEXT_PUBLIC_API_URL is not configured"
+    );
   }
 
-  if (typeof window !== "undefined") {
-    const isHttps = window.location.protocol === "https:";
-    const protocol = isHttps ? "wss:" : "ws:";
-    const host = `${window.location.hostname || "127.0.0.1"}:8000`;
-    return `${protocol}//${host}/api/voice/live?session_id=${encodeURIComponent(sessionId)}&language=${encodeURIComponent(language)}`;
-  }
+  const wsBase = envApi
+    .replace(/^http/i, "ws")
+    .replace(/\/+$/, "");
 
-  return `ws://127.0.0.1:8000/api/voice/live?session_id=${encodeURIComponent(sessionId)}&language=${encodeURIComponent(language)}`;
+  const url = new URL(`${wsBase}/api/voice/live`);
+
+  url.searchParams.set("session_id", sessionId);
+  url.searchParams.set("language", language);
+
+  return url.toString();
 }
 
 
