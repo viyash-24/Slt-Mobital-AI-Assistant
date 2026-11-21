@@ -11,7 +11,7 @@ from __future__ import annotations
 FALLBACK_ANSWER = (
     "I do not have enough verified information to answer that question. "
     "Please call the SLT-MOBITEL customer helpline at 1212 or visit "
-    "https://www.sltmobitel.lk/ for accurate assistance."
+    "https://www.sltmobitel.lk/?lan=en for accurate assistance."
 )
 
 
