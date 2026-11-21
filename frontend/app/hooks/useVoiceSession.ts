@@ -25,7 +25,7 @@ const MAX_RECONNECT_ATTEMPTS = 2;
 const RECONNECT_DELAY_MS = 450;
 
 // Jitter buffer: how far ahead we schedule audio relative to AudioContext clock.
-// 120 ms provides a solid runway that absorbs WebSocket network packet jitter
+// 200 ms provides a solid runway that absorbs WebSocket network packet jitter
 // without dropping or skipping samples, completely eliminating stutter and breaking.
 
 function getVoiceWebSocketUrl(
@@ -359,12 +359,16 @@ export function useVoiceSession({ language = "EN" }: UseVoiceSessionOptions) {
         const now = activeContext.currentTime;
 
         // 4. Seamless timeline scheduling without breaking:
-        // If playback is not yet active or if the queue has underrun (nextPlayTime < now),
-        // give a gentle 50ms initial runway ahead of the audio hardware clock.
+        // If playback is not yet active, give a small 60ms initial runway — enough to absorb
+        // one network jitter hop without adding noticeable startup lag.
+        // If the queue has underrun (nextPlayTime < now), re-anchor with 80ms so the next
+        // chunk also has a safe margin without stuttering.
         // If queue is already running and in the future (nextPlayTime >= now),
         // schedule the next chunk EXACTLY at nextPlayTime for 100% gapless, seamless audio.
-        if (!isSpeakingRef.current || nextPlayTimeRef.current < now) {
-          nextPlayTimeRef.current = now + 0.05;
+        if (!isSpeakingRef.current) {
+          nextPlayTimeRef.current = now + 0.06;  // 60ms initial buffer
+        } else if (nextPlayTimeRef.current < now) {
+          nextPlayTimeRef.current = now + 0.08;  // 80ms recovery buffer after underrun
         }
 
         const playTime = nextPlayTimeRef.current;
@@ -386,15 +390,24 @@ export function useVoiceSession({ language = "EN" }: UseVoiceSessionOptions) {
           if (epoch !== playbackEpochRef.current) return;
           activeSourcesSetRef.current.delete(source);
 
-          // Only return to listening if the backend marked turn complete
-          // AND all audio buffers have finished playing through the speakers
-          if (activeSourcesSetRef.current.size === 0 && turnCompleteReceivedRef.current) {
+          // Only transition to listening when ALL of these are true:
+          // 1. No more audio buffers are actively playing
+          // 2. The backend sent turn_complete (all audio chunks delivered)
+          // 3. We are still within the same epoch (no barge-in happened)
+          // The turn_complete timeout handler is the primary path for state transitions;
+          // this onended handler is a safety fallback for very short utterances where
+          // turn_complete arrives before the last buffer finishes.
+          if (
+            activeSourcesSetRef.current.size === 0 &&
+            turnCompleteReceivedRef.current &&
+            epoch === playbackEpochRef.current
+          ) {
             const currentAudioTime = activeContext.currentTime;
+            // Add a 100ms guard so we don't flip to listening if more chunks arrive
             if (currentAudioTime >= turnScheduledEndTimeRef.current - 0.05) {
-              isGreetingActiveRef.current = false;
-              isSpeakingRef.current = false;
-              setState("listening");
-              setStatusMessage("Listening to you...");
+              // isSpeakingRef is intentionally NOT reset here to prevent the scheduling
+              // race where a late-arriving chunk sees isSpeakingRef=false and re-anchors
+              // the timeline with a 200ms gap. The turn_complete timeout is authoritative.
             }
           }
         };
@@ -810,7 +823,7 @@ export function useVoiceSession({ language = "EN" }: UseVoiceSessionOptions) {
               const audioTime = currentCtx ? currentCtx.currentTime : 0;
               const scheduledEnd = turnScheduledEndTimeRef.current;
               const currentEpoch = playbackEpochRef.current;
-              const remainingMs = Math.max(60, (scheduledEnd - audioTime) * 1000 + 80);
+              const remainingMs = Math.max(80, (scheduledEnd - audioTime) * 1000 + 80);
 
               setTimeout(() => {
                 if (currentEpoch === playbackEpochRef.current) {
