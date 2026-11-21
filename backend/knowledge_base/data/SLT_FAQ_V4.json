@@ -27,8 +27,8 @@
       "category": "Billing FAQs",
       "question": "How can I pay a bill online?",
       "responses": {
-        "en": "• You can use the pay online option on MySLT App/Portal (https://myslt.slt.lk/).\n• You can also pay online using our web based portal via https://pay.slt.lk/web/\n• You can also pay online using our webslte (https://www.sltmobitel.lk/)",
-        "si": "• ඔබට MySLT App/Portal (https://myslt.slt.lk/) හි ඔන්ලයින් ගෙවීම් විකල්පය භාවිතා කළ හැක.\n• ඔබට https://pay.slt.lk/web/ හරහා අපගේ වෙබ් විකල්පයද භාවිතා කර ඔන්ලයින් ගෙවිය හැකිය.\n• ඔබට අපගේ වෙබ් අඩවිය භාවිතා කර ඔන්ලයින් ගෙවීම් කළ හැකිය (https://www.sltmobitel.lk/)\n"
+        "en": "• You can use the pay online option on MySLT App/Portal (https://myslt.slt.lk/).\n• You can also pay online using our web based portal via https://pay.slt.lk/web/\n• You can also pay online using our web portal (https://www.sltmobitel.lk/?lan=en)",
+        "si": "• ඔබට MySLT App/Portal (https://myslt.slt.lk/) හි ඔන්ලයින් ගෙවීම් විකල්පය භාවිතා කළ හැක.\n• ඔබට https://pay.slt.lk/web/ හරහා අපගේ වෙබ් විකල්පයද භාවිතා කර ඔන්ලයින් ගෙවිය හැකිය.\n• ඔබට අපගේ වෙබ් අඩවිය භාවිතා කර ඔන්ලයින් ගෙවීම් කළ හැකිය (https://www.sltmobitel.lk/?lan=en)\n"
       },
       "source": {
         "sheet": "Sheet1",
@@ -41,8 +41,8 @@
       "category": "Billing FAQs",
       "question": "How can I pay my bill?",
       "responses": {
-        "en": "• You can use the pay online option on MySLT App/Portal (https://myslt.slt.lk/).\n• You can also pay online using our web based portal via https://pay.slt.lk/web/\n• You can also pay online using our webslte (https://www.sltmobitel.lk/)\n\nYou can also pay your bill by visiting the following locations:\n1. SLTMobitel outlets\n2. Banks (Online apps/Visits)\n3. Supermarkets\n4. Payment Dealer outlets (etc..)",
-        "si": "• ඔබට MySLT App/Portal (https://myslt.slt.lk/) හි ඔන්ලයින් ගෙවීම් විකල්පය භාවිතා කළ හැක.\n• ඔබට https://pay.slt.lk/web/ හරහා අපගේ වෙබ් විකල්පයද භාවිතා කර ඔන්ලයින් ගෙවිය හැකිය.\n• ඔබට අපගේ වෙබ් අඩවිය භාවිතා කර ඔන්ලයින් ගෙවීම් කළ හැකිය (https://www.sltmobitel.lk/)\n\nඑසේම ඔබට පහත ස්ථාන වෙත පැමිණ ඔබගේ බිල්පත ගෙවිය හැකිය:\n1. SLTMobitel ශාඛා\n2. බැංකු (Online Apps / බැංකුවට පැමිණ)\n3. සුපිරි වෙළඳසැල්\n4. Payment Dealer ශාඛා (ආදිය)"
+        "en": "• You can use the pay online option on MySLT App/Portal (https://myslt.slt.lk/).\n• You can also pay online using our web based portal via https://pay.slt.lk/web/\n• You can also pay online using our web portal (https://www.sltmobitel.lk/?lan=en)\n\nYou can also pay your bill by visiting the following locations:\n1. SLTMobitel outlets\n2. Banks (Online apps/Visits)\n3. Supermarkets\n4. Payment Dealer outlets (etc..)",
+        "si": "• ඔබට MySLT App/Portal (https://myslt.slt.lk/) හි ඔන්ලයින් ගෙවීම් විකල්පය භාවිතා කළ හැක.\n• ඔබට https://pay.slt.lk/web/ හරහා අපගේ වෙබ් විකල්පයද භාවිතා කර ඔන්ලයින් ගෙවිය හැකිය.\n• ඔබට අපගේ වෙබ් අඩවිය භාවිතා කර ඔන්ලයින් ගෙවීම් කළ හැකිය (https://www.sltmobitel.lk/?lan=en)\n\nඑසේම ඔබට පහත ස්ථාන වෙත පැමිණ ඔබගේ බිල්පත ගෙවිය හැකිය:\n1. SLTMobitel ශාඛා\n2. බැංකු (Online Apps / බැංකුවට පැමිණ)\n3. සුපිරි වෙළඳසැල්\n4. Payment Dealer ශාඛා (ආදිය)"
       },
       "source": {
         "sheet": "Sheet1",
