@@ -9,7 +9,6 @@ reasoning controls, multi-turn message structuring, and candidate model fallback
 from __future__ import annotations
 
 import logging
-from typing import Sequence
 
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI

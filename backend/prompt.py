@@ -60,7 +60,7 @@ When context lacks verified information to answer reliably, politely state:
 Direct the customer to:
 - 24/7 SLT Helpline: **1212**
 - Mobitel Helpline: **1717**
-- Official Website: **https://www.sltmobitel.lk/**"""
+- Official Website: **https://www.sltmobitel.lk/?lan=en**"""
 
 FALLBACK_SPOKEN_PROTOCOL = (
     "If information is missing or unconfirmed in the knowledge base, state that you do not "
@@ -122,7 +122,7 @@ Assistant: I don't have verified information regarding specific regional connect
 
 **Example 6: Unsupported / Missing Package & Escalation (Anti-Hallucination Fallback)**
 Customer: How much is the SLT Ultra Diamond Gigabit package?
-Assistant: I don't have verified information on an "SLT Ultra Diamond" package in my official knowledge base. For verified package availability or custom enterprise fiber plans, please contact the 24/7 SLT helpline at **1212** or visit **https://www.sltmobitel.lk/**."""
+Assistant: I don't have verified information on an "SLT Ultra Diamond" package in my official knowledge base. For verified package availability or custom enterprise fiber plans, please contact the 24/7 SLT helpline at **1212** or visit **https://www.sltmobitel.lk/?lan=en**."""
 
 
 # ── 4. Voice Channel: Spoken Interaction Rules & Language Pacing ────────────
