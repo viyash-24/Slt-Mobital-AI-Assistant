@@ -140,11 +140,6 @@ class AssistantService:
         self._context_cache[cache_key] = result
         return result
 
-    def retrieve_context_text(self, query: str, k: int = 3) -> str:
-        """Return a plain-text context string for knowledge queries."""
-        context_text, _ = self.retrieve_context(query, k=k)
-        return context_text
-
     # ── Private helpers ──────────────────────────────────────────────────────
 
     @staticmethod
